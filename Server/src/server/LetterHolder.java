@@ -14,4 +14,12 @@ public class LetterHolder {
             currentLetters.add(letterSack.drawLetter());
         }
     }
+
+    public Letter takeLetter(int index) {
+
+        Letter chosenLetter = currentLetters.get(index);
+        currentLetters.remove(index);
+        return chosenLetter;
+
+    }
 }

@@ -31,7 +31,7 @@ public class LetterSack {
         }
     }
 
-    Letter drawLetter() {
+    public Letter drawLetter() {
 
         Random rand = new Random();
         int available = letterSack.size();
@@ -39,6 +39,10 @@ public class LetterSack {
         letterSack.remove(index);
         return letterSack.get(index);
 
+    }
+
+    LetterHolder getFirstDraw() {
+        return new LetterHolder(this);
     }
 
 }

@@ -10,7 +10,7 @@ public class Board {
 
     Tile[][] board = new Tile[15][15];
 
-    public Board(){
+    public Board(Game game){
         try (FileReader fileReader = new FileReader("src/resources/boardConfiguration.csv");
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
             String line;
@@ -44,6 +44,54 @@ public class Board {
 
     public Tile[][] getBoard() {
         return board;
+    }
+
+    public void placeLetter(Letter letter, int i, int j) {
+        if (board[i][j].content == null) {
+            board[i][j].content = letter;
+        }
+    }
+
+    public void printBoardWithContent() {
+        for (int i = 0; i < 15; i++) {
+            for (int j = 0; j < 15; j++)
+                System.out.print(board[i][j].content + " ");
+            System.out.println();
+        }
+    }
+
+    public Tile getTile(int i, int j) {
+
+        return board[i][j];
+    }
+
+    //from one tile we compute the neighbours
+
+    public Tile getLeft(Tile tile) {
+
+        if (tile.col == 0)
+            return null;
+        else return getTile(tile.line, tile.col - 1);
+    }
+
+    public Tile getUp(Tile tile) {
+
+        if (tile.line == 0)
+            return null;
+        else return getTile(tile.line + 1, tile.col);
+    }
+
+    public Tile getRight(Tile tile) {
+
+        if (tile.col == 14)
+            return null;
+        else return getTile(tile.line, tile.col + 1);
+    }
+
+    public Tile getDown(Tile tile) {
+        if (tile.line == 14)
+            return null;
+        else return getTile(tile.line - 1, tile.col);
     }
 
     @Override
