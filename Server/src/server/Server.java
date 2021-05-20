@@ -65,7 +65,11 @@ public class Server {
         System.out.println("Holder after shuffle:");
         currentPlayer.shuffleHolder();
         System.out.println(currentPlayer.getHolder().currentLetters);
-
+        System.out.println("The word is: ");
+        System.out.println(game.word);
+        System.out.println("Here are some suggestions for anagrams: ");
+        game.computeAnagrams("", game.word);
+        game.showAnagrams();
         Server server = new Server();
     }
 }
