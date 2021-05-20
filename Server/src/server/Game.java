@@ -2,14 +2,17 @@ package server;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Game {
     private final List<Player> players = new ArrayList<>();
+    private Integer turn;
     private Player currentPlayer;
     public final LetterSack letterSack = new LetterSack();
     public final Board board = new Board(this);
-    public final List<Letter> pendingWord = new ArrayList<>();
+    public List<Letter> pendingWord = new ArrayList<>();
     public final List<Integer> coordX = new ArrayList<>();
     public final List<Integer> coordY = new ArrayList<>();
     public List<String> anagrams = new ArrayList<>();
@@ -37,6 +40,53 @@ public class Game {
         coordY.add(j);
     }
 
+    void addMissing() {
+        List<Integer> missing = new ArrayList<>();
+        List<Letter> temp = new ArrayList<>();
+        Integer line = 0;
+        Integer col = 0;
+        if (coordX.get(0) == coordX.get(1)) {
+            line = coordX.get(0);
+            for (int i = 0; i < coordY.size() - 1; i++)
+                if (coordY.get(i) != coordY.get(i + 1) - 1) {
+                    missing.add(coordY.get(i) + 1);
+                }
+
+            for (int i = 0; i < missing.size(); i++) {
+                coordY.add(missing.get(i));
+                coordX.add(line);
+                pendingWord.add(board.board[line][missing.get(i)].content);
+
+                System.out.println(missing);
+            }
+
+            for (int i = 0; i < coordY.size(); i++)
+                temp.add(pendingWord.get(i));
+            System.out.println(temp);
+            Collections.sort(coordY);
+            pendingWord = temp;
+        } else if (coordY.get(0) == coordY.get(1)) {
+            col = coordY.get(0);
+            for (int i = 0; i < coordX.size() - 1; i++)
+                if (coordX.get(i) != coordX.get(i + 1) - 1) {
+                    missing.add(coordX.get(i) + 1);
+                }
+
+            for (int i = 0; i < missing.size(); i++) {
+                coordX.add(missing.get(i));
+                coordY.add(col);
+                pendingWord.add(board.board[missing.get(i)][col].content);
+                System.out.println(missing);
+            }
+            temp = new ArrayList<>();
+            for (int i = 0; i < coordX.size(); i++)
+                temp.add(pendingWord.get(i));
+            System.out.println("Temp" + temp);
+            Collections.sort(coordX);
+            pendingWord = temp;
+        }
+    }
+
     public void addPlayer(String name) {
         Player player = new Player(name, this);
         players.add(player);
@@ -51,7 +101,14 @@ public class Game {
         return pendingWord;
     }
 
+    public void overTurn(){
+        pendingWord.clear();
+        coordX.clear();
+        coordY.clear();
+    }
+
     public Integer computeScoreOfWord() throws IOException {
+
         int wordScore = 0;
         for (int i = 0; i < pendingWord.size(); i++) {
             Tile currentTile = board.board[coordX.get(i)][coordY.get(i)];
@@ -81,9 +138,7 @@ public class Game {
         tripleWord = false;
         confirmWord();
         //word = new String();
-        pendingWord.clear();
-        coordX.clear();
-        coordY.clear();
+
         currentPlayer.refillAfterTurn();
         return wordScore;
     }
@@ -91,7 +146,6 @@ public class Game {
     public void transformPendingWord() {
         for (int i = 0; i < pendingWord.size(); i++)
             word = word + pendingWord.get(i).letterName;
-        word = "las";
     }
     //TODO: search more efficiently
     public Boolean checkWord(String word) throws IOException {

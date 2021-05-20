@@ -23,10 +23,12 @@ public class Player {
 
     public void putLetterInTile(Letter letter, int i, int j) {
         if (holder.currentLetters.contains(letter)) {
-            holder.currentLetters.remove(letter);
-            game.addLetterToBoard(letter, i, j);
-            game.getBoard().board[i][j].content = letter;
+            if (game.getBoard().board[i][j].content == null) {
+                holder.currentLetters.remove(letter);
+                game.addLetterToBoard(letter, i, j);
+                game.getBoard().board[i][j].content = letter;
 
+            } else System.out.println("It is not empty");
         }
     }
 

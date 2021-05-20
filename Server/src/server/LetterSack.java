@@ -35,7 +35,7 @@ public class LetterSack {
 
         Random rand = new Random();
         int available = letterSack.size();
-        int index = rand.nextInt(available);
+        int index = rand.nextInt(available - 1);
         letterSack.remove(index);
         return letterSack.get(index);
 

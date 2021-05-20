@@ -41,10 +41,8 @@ public class Server {
         System.out.println(currentPlayer.getHolder().currentLetters);
 
         //The player puts a word on the board
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 0, 0);
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 0, 1);
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 0, 2);
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 0, 3);
+        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 1, 1);
+        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 1);
 
         System.out.println();
         System.out.println("This is what he has left on the holder");
@@ -56,6 +54,7 @@ public class Server {
         System.out.println("This was his word:");
         System.out.println(game.pendingWord);
         System.out.println(game.coordX + " " + game.coordY);
+        game.addMissing();
         System.out.println("The score for the word:");
         System.out.println(game.computeScoreOfWord());
 
@@ -70,6 +69,19 @@ public class Server {
         System.out.println("Here are some suggestions for anagrams: ");
         game.computeAnagrams("", game.word);
         game.showAnagrams();
+        game.overTurn();
+
+
+        System.out.println(game.computeScoreOfWord());
+        game.overTurn();
+
+        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 0);
+        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 2);
+        game.board.printBoardWithContent();
+        game.addMissing();
+        System.out.println(game.getPendingWord() + " " + game.coordX + " " + game.coordY);
+        System.out.println(game.computeScoreOfWord());
+
         Server server = new Server();
     }
 }
