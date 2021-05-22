@@ -192,7 +192,7 @@ public class Game implements Serializable{
     }
 
     public void playTurn() throws IOException {
-        //we put tiles on the board until a button is pressed
+        // we put tiles on the board until a button is pressed
 
             Scanner in = new Scanner(System.in);
             String command = null;
@@ -211,10 +211,10 @@ public class Game implements Serializable{
             }
         addMissing();
         transformPendingWord();
-        System.out.println("This was his word:");
+        System.out.print("This was his word: ");
         System.out.println(pendingWord);
         System.out.println(coordX + " " + coordY);
-        System.out.println("Added:" + addedX + " " + addedY);
+        System.out.print("Added: " + addedX + " " + addedY);
 
         if (!confirmWord()) {
             for (int i = 0; i < addedX.size(); i++)

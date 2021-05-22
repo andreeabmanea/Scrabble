@@ -15,6 +15,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.List;
+import java.util.Scanner;
 
 public class Client extends Application {
     public static final int PORT = 7070;
@@ -25,15 +26,39 @@ public class Client extends Application {
 
     public static void main(String[] args) throws IOException {
         try (Socket socket = new Socket(ADDRESS, PORT);
+             PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream()) ) {
+            Scanner in = new Scanner(System.in);
 
-            game = (Game) inStream.readObject(); // read the game
+//            game = (Game) inStream.readObject(); // read the game
 
-            List<Letter> pouch = (List<Letter>) inStream.readObject(); // get initial letters
-            System.out.println(pouch);
-            System.out.println(pouch.get(0).getLetterName());
+            System.out.println("Hello! Here is the current board");
+            Board board = (Board) inStream.readObject();
+            board.printBoard();
+            List<Letter> letters;
+            while (true) {
+                for (int i = 0; i < 7; i++) {
+                    letters = (List<Letter>) inStream.readObject();
+                    System.out.println("Here are your letters: " + letters);
 
-            launch(args);
+                    System.out.print("Please enter the index of the letter: ");
+                    out.println(in.nextInt());
+                    System.out.print("The line where you want the letter to be: ");
+                    out.println(in.nextInt());
+                    System.out.print("And the column where you want the letter to be: ");
+                    out.println(in.nextInt());
+
+
+                    System.out.print("Done? yes/no: ");
+                    if (in.next().equals("yes")) {
+                        out.println("yes");
+                       // board.printBoardWithContent();
+                        break;
+                    }
+                    out.println("no");
+                }
+            }
+//            launch(args);
         } catch (UnknownHostException | ClassNotFoundException e) {
             System.err.println("No server listening... " + e);
         }
@@ -51,7 +76,6 @@ public class Client extends Application {
 
         StackPane window = new StackPane();
         Scene scene = new Scene(window, 1000, 600);
-
 
         Board mainBoard = game.getBoard();
         Tile tile;

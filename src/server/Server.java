@@ -1,7 +1,6 @@
 package server;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -12,19 +11,19 @@ public class Server {
     public static void main ( String [] args ) throws IOException {
 
         Game game = new Game();
-        //We generate the letter sack
-        System.out.println("The initial letter sack is:");
-        System.out.println(game.getLetterSack().letterSack);
-        System.out.println();
-
-        System.out.println("This is how the board looks like, based on the tiles type");
-        game.getBoard().printBoard();
-        System.out.println();
-
-        //The player draws first letters
-        Player currentPlayer = game.getCurrentPlayer();
-        System.out.println("The player's letters are:");
-        System.out.println(currentPlayer.getHolder().currentLetters);
+//        //We generate the letter sack
+//        System.out.println("The initial letter sack is:");
+//        System.out.println(game.getLetterSack().letterSack);
+//        System.out.println();
+//
+//        System.out.println("This is how the board looks like, based on the tiles type");
+//        game.getBoard().printBoard();
+//        System.out.println();
+//
+//        //The player draws first letters
+//        Player currentPlayer = game.getCurrentPlayer();
+//        System.out.println("The player's letters are:");
+//        System.out.println(currentPlayer.getHolder().currentLetters);
 
         //The player puts a word on the board
 
@@ -50,8 +49,8 @@ public class Server {
 //        game.showAnagrams();
 //        game.overTurn();
 
-        while (game.getLetterSack().letterSack.size() > 0)
-            game.playTurn();
+//        while (game.getLetterSack().letterSack.size() > 0)
+//            game.playTurn();
 
 //        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 0);
 //        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 2);
@@ -65,11 +64,50 @@ public class Server {
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             Socket socket = serverSocket.accept();
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            outStream.writeObject(new Game()); // send the game
+            // send initial board and his letters
+            outStream.writeObject(game.getBoard()); // give client the board
+            outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters()); // give player's letters
 
-            outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters()); // send his letters
+            String response;
+            int index;
+            int row;
+            int column;
+
+            while (game.getLetterSack().getLetterSack().size() > 0) {
+                while (true) {
+                    // index, row and column
+                    index = Integer.parseInt(in.readLine());
+                    row = Integer.parseInt(in.readLine());
+                    column = Integer.parseInt(in.readLine());
+                    System.out.println(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index));
+                    // change the tile
+                    game.getCurrentPlayer().putLetterInTile(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index), row, column);
+
+                    // still continue
+                    response = in.readLine();
+                    if (response.equals("yes")) {
+                        break;
+                    }
+                    outStream.writeUnshared(game.getCurrentPlayer().getHolder().getCurrentLetters());
+                }
+                game.addMissing();
+                game.transformPendingWord();
+                System.out.print("This was his word: " + game.word);
+                if (!game.confirmWord()) {
+                    for (int i = 0; i < game.addedX.size(); i++)
+                        game.getCurrentPlayer().getHolder().getCurrentLetters().add(game.getBoard().board[game.addedX.get(i)][game.addedY.get(i)].content);
+                    game.removeWordFromBoard();
+                    System.out.println("The word does not exist!");
+                } else {
+                    System.out.println("The score for the word:" + game.computeScoreOfWord());
+                    game.getCurrentPlayer().refillAfterTurn();
+                }
+                game.board.printBoardWithContent();
+            }
 
         } catch (IOException e) {
             System.err.println("Ooops... " + e);

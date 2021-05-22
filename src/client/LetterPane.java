@@ -9,17 +9,19 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import server.Letter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LetterPane extends Pane {
     public VBox root;
+    List<Button> buttons;
+    public Button button0 = new Button();
     public Button button1 = new Button();
     public Button button2 = new Button();
     public Button button3 = new Button();
     public Button button4 = new Button();
     public Button button5 = new Button();
     public Button button6 = new Button();
-    public Button button7 = new Button();
     public Image aLetter = new Image("resources_client/A_letter.png");
     public Image bLetter = new Image("resources_client/B_letter.png");
     public Image cLetter = new Image("resources_client/C_letter.png");
@@ -54,42 +56,48 @@ public class LetterPane extends Pane {
         root.setPadding(new Insets(20, 10, 20, 10));
         root.setSpacing(30);
 
-//        button1.setPrefSize(30,30);
-//        button2.setPrefSize(30,30);
-//        button3.setPrefSize(30,30);
-//        button4.setPrefSize(30,30);
-//        button5.setPrefSize(30,30);
-//        button6.setPrefSize(30,30);
-//        button7.setPrefSize(30,30);
+        buttons = new ArrayList<>();
+        buttons.add(button0);
+        buttons.add(button1);
+        buttons.add(button2);
+        buttons.add(button3);
+        buttons.add(button4);
+        buttons.add(button5);
+        buttons.add(button6);
 
-        button1.setGraphic(new ImageView(aLetter));
-//        for (Letter letter : playerLetters) {
-//            switch(letter.getLetterName()) {
-//                case "A" -> button1.setGraphic(new ImageView(aLetter));
-//                case "B" -> button1.setGraphic(new ImageView(bLetter));
-//                case "C" -> button1.setGraphic(new ImageView(cLetter));
-//                case "D" -> button1.setGraphic(new ImageView(dLetter));
-//                case "E" -> button1.setGraphic(new ImageView(eLetter));
-//                case "F" -> button1.setGraphic(new ImageView(fLetter));
-//                case "G" -> button1.setGraphic(new ImageView(gLetter));
-//                case "H" -> button1.setGraphic(new ImageView(hLetter));
-//                case "I" -> button1.setGraphic(new ImageView(iLetter));
-//                case "J" -> button1.setGraphic(new ImageView(jLetter));
-//                case "L" -> button1.setGraphic(new ImageView(lLetter));
-//                case "M" -> button1.setGraphic(new ImageView(mLetter));
-//                case "N" -> button1.setGraphic(new ImageView(nLetter));
-//                case "O" -> button1.setGraphic(new ImageView(oLetter));
-//                case "P" -> button1.setGraphic(new ImageView(pLetter));
-//                case "R" -> button1.setGraphic(new ImageView(rLetter));
-//                case "S" -> button1.setGraphic(new ImageView(sLetter));
-//                case "T" -> button1.setGraphic(new ImageView(tLetter));
-//                case "U" -> button1.setGraphic(new ImageView(uLetter));
-//                case "V" -> button1.setGraphic(new ImageView(vLetter));
-//                case "X" -> button1.setGraphic(new ImageView(xLetter));
-//                case "Z" -> button1.setGraphic(new ImageView(zLetter));
-//                case "Joker" -> button1.setGraphic((new ImageView(joker)));
-//            }
-//        }
-        root.getChildren().addAll(button1, button2, button3, button4, button5, button6, button7);
+        int i = 0;
+        for (Letter letter : playerLetters) {
+            switch(letter.getLetterName()) {
+                case "A" -> buttons.get(i).setGraphic(new ImageView(aLetter));
+                case "B" -> buttons.get(i).setGraphic(new ImageView(bLetter));
+                case "C" -> buttons.get(i).setGraphic(new ImageView(cLetter));
+                case "D" -> buttons.get(i).setGraphic(new ImageView(dLetter));
+                case "E" -> buttons.get(i).setGraphic(new ImageView(eLetter));
+                case "F" -> buttons.get(i).setGraphic(new ImageView(fLetter));
+                case "G" -> buttons.get(i).setGraphic(new ImageView(gLetter));
+                case "H" -> buttons.get(i).setGraphic(new ImageView(hLetter));
+                case "I" -> buttons.get(i).setGraphic(new ImageView(iLetter));
+                case "J" -> buttons.get(i).setGraphic(new ImageView(jLetter));
+                case "L" -> buttons.get(i).setGraphic(new ImageView(lLetter));
+                case "M" -> buttons.get(i).setGraphic(new ImageView(mLetter));
+                case "N" -> buttons.get(i).setGraphic(new ImageView(nLetter));
+                case "O" -> buttons.get(i).setGraphic(new ImageView(oLetter));
+                case "P" -> buttons.get(i).setGraphic(new ImageView(pLetter));
+                case "R" -> buttons.get(i).setGraphic(new ImageView(rLetter));
+                case "S" -> buttons.get(i).setGraphic(new ImageView(sLetter));
+                case "T" -> buttons.get(i).setGraphic(new ImageView(tLetter));
+                case "U" -> buttons.get(i).setGraphic(new ImageView(uLetter));
+                case "V" -> buttons.get(i).setGraphic(new ImageView(vLetter));
+                case "X" -> buttons.get(i).setGraphic(new ImageView(xLetter));
+                case "Z" -> buttons.get(i).setGraphic(new ImageView(zLetter));
+                case "Joker" -> buttons.get(i).setGraphic(new ImageView(joker));
+            }
+            i++;
+        }
+
+
+
+
+        root.getChildren().addAll(buttons.get(0), buttons.get(1), buttons.get(2), buttons.get(3), buttons.get(4), buttons.get(5), buttons.get(6));
     }
 }

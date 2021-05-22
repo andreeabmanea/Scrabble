@@ -32,6 +32,10 @@ public class LetterSack implements Serializable {
         }
     }
 
+    public List<Letter> getLetterSack() {
+        return letterSack;
+    }
+
     public Letter drawLetter() {
 
         Random rand = new Random();
