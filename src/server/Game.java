@@ -100,44 +100,48 @@ public class Game {
     }
 
     public Integer computeScoreOfWord() throws IOException {
-
-        int wordScore = 0;
-        for (int i = 0; i < pendingWord.size(); i++) {
-            Tile currentTile = board.board[coordX.get(i)][coordY.get(i)];
-            switch (currentTile.type) {
-                case "2L":
-                    wordScore = wordScore + 2 * currentTile.content.value;
-                    break;
-                case "3L":
-                    wordScore = wordScore + 3 * currentTile.content.value;
-                    break;
-                case "2W":
-                    wordScore = wordScore + currentTile.content.value;
-                    doubleWord = true;
-                    break;
-                case "3W":
-                    wordScore = wordScore + currentTile.content.value;
-                    tripleWord = true;
-                    break;
-                default: wordScore = wordScore + currentTile.content.value;
+        if (confirmWord()) {
+            int wordScore = 0;
+            for (int i = 0; i < pendingWord.size(); i++) {
+                Tile currentTile = board.board[coordX.get(i)][coordY.get(i)];
+                switch (currentTile.type) {
+                    case "2L":
+                        wordScore = wordScore + 2 * currentTile.content.value;
+                        break;
+                    case "3L":
+                        wordScore = wordScore + 3 * currentTile.content.value;
+                        break;
+                    case "2W":
+                        wordScore = wordScore + currentTile.content.value;
+                        doubleWord = true;
+                        break;
+                    case "3W":
+                        wordScore = wordScore + currentTile.content.value;
+                        tripleWord = true;
+                        break;
+                    default:
+                        wordScore = wordScore + currentTile.content.value;
+                }
             }
+            if (doubleWord)
+                wordScore = wordScore * 2;
+            if (tripleWord)
+                wordScore = wordScore * 3;
+            doubleWord = false;
+            tripleWord = false;
+            word = new String();
+            currentPlayer.refillAfterTurn();
+            return wordScore;
         }
-        if (doubleWord)
-            wordScore = wordScore * 2;
-        if (tripleWord)
-            wordScore = wordScore * 3;
-        doubleWord = false;
-        tripleWord = false;
-        confirmWord();
-        //word = new String();
-
-        currentPlayer.refillAfterTurn();
-        return wordScore;
+        word = new String();
+        System.out.println("The word does not exist!");
+        return 0;
     }
 
     public void transformPendingWord() {
         for (int i = 0; i < pendingWord.size(); i++)
             word = word + pendingWord.get(i).letterName;
+        System.out.println(word);
     }
     //TODO: search more efficiently
     public Boolean checkWord(String word) throws IOException {
@@ -153,12 +157,15 @@ public class Game {
         return false;
     }
 
-    public void confirmWord() throws IOException {
+    public Boolean confirmWord() throws IOException {
 
         transformPendingWord();
-        if (checkWord(word)) {
+        System.out.println("Cuvantul: " + word);
+        if (checkWord(word.toLowerCase())) {
             System.out.println("Confirmed");
+            return true;
         }
+        return false;
     }
 
     public void computeAnagrams(String prefix, String word) throws IOException {
@@ -173,5 +180,10 @@ public class Game {
     public void showAnagrams() {
         for (String anagram : anagrams)
             System.out.println(anagram);
+    }
+
+    public void removeWordFromBoard() {
+        for (int i = 0; i < pendingWord.size(); i++)
+            board.board[coordX.get(i)][coordY.get(i)].content = null;
     }
 }

@@ -30,35 +30,31 @@ public class Server {
         currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 1, 1);
         currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 1);
 
-        System.out.println();
-        System.out.println("This is what he has left on the holder");
-        System.out.println(currentPlayer.getHolder().currentLetters);
-
-        System.out.println("This is how the board looks like, after first turn:");
-        game.getBoard().printBoardWithContent();
+//        System.out.println();
+//        System.out.println("This is what he has left on the holder");
+//        System.out.println(currentPlayer.getHolder().currentLetters);
+//
+//        System.out.println("This is how the board looks like, after first turn:");
+//        game.getBoard().printBoardWithContent();
 
         System.out.println("This was his word:");
         System.out.println(game.pendingWord);
         System.out.println(game.coordX + " " + game.coordY);
         game.addMissing();
-        System.out.println("The score for the word:");
-        System.out.println(game.computeScoreOfWord());
+        System.out.println("The score for the word:" + game.computeScoreOfWord());
 
-        System.out.println("After refill:");
-        System.out.println(currentPlayer.getHolder().currentLetters);
+//        System.out.println("After refill:");
+//        System.out.println(currentPlayer.getHolder().currentLetters);
+//
+//        System.out.println("Holder after shuffle:");
+//        currentPlayer.shuffleHolder();
+//        System.out.println(currentPlayer.getHolder().currentLetters);
+   //     System.out.println("The word is: " + game.word);
+//        System.out.println("Here are some suggestions for anagrams: ");
+//        game.computeAnagrams("", game.word);
+//        game.showAnagrams();
+//        game.overTurn();
 
-        System.out.println("Holder after shuffle:");
-        currentPlayer.shuffleHolder();
-        System.out.println(currentPlayer.getHolder().currentLetters);
-        System.out.println("The word is: ");
-        System.out.println(game.word);
-        System.out.println("Here are some suggestions for anagrams: ");
-        game.computeAnagrams("", game.word);
-        game.showAnagrams();
-        game.overTurn();
-
-
-        System.out.println(game.computeScoreOfWord());
         game.overTurn();
 
         currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 0);
@@ -66,7 +62,7 @@ public class Server {
         game.board.printBoardWithContent();
         game.addMissing();
         System.out.println(game.getPendingWord() + " " + game.coordX + " " + game.coordY);
-        System.out.println(game.computeScoreOfWord());
+        System.out.println("The score: " + game.computeScoreOfWord());
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             Socket socket = serverSocket.accept();
