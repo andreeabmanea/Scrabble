@@ -1,12 +1,9 @@
 package server;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class Game implements Serializable{
+public class Game {
     private final List<Player> players = new ArrayList<>();
     private Integer turn;
     private Player currentPlayer;
@@ -59,12 +56,10 @@ public class Game implements Serializable{
 
                 System.out.println(missing);
             }
+            List<Letter> sorted = new ArrayList(pendingWord);
+            Collections.sort(sorted, Comparator.comparing(s->coordY.get(pendingWord.indexOf(s))));
+            pendingWord = sorted;
 
-            for (int i = 0; i < coordY.size(); i++)
-                temp.add(pendingWord.get(i));
-            System.out.println(temp);
-            Collections.sort(coordY);
-            pendingWord = temp;
         } else if (coordY.get(0) == coordY.get(1)) {
             col = coordY.get(0);
             for (int i = 0; i < coordX.size() - 1; i++)
@@ -78,12 +73,9 @@ public class Game implements Serializable{
                 pendingWord.add(board.board[missing.get(i)][col].content);
                 System.out.println(missing);
             }
-            temp = new ArrayList<>();
-            for (int i = 0; i < coordX.size(); i++)
-                temp.add(pendingWord.get(i));
-            System.out.println("Temp" + temp);
-            Collections.sort(coordX);
-            pendingWord = temp;
+            List<Letter> sorted = new ArrayList(pendingWord);
+            Collections.sort(sorted, Comparator.comparing(s->coordX.get(pendingWord.indexOf(s))));
+            pendingWord = sorted;
         }
     }
 
@@ -154,9 +146,9 @@ public class Game implements Serializable{
         BufferedReader bufferedReader = new BufferedReader(fileReader);
         String line;
         while ((line= bufferedReader.readLine())!=null) {
-           if (line.equals(word)) {
-               return true;
-           }
+            if (line.equals(word)) {
+                return true;
+            }
         }
         return false;
     }
