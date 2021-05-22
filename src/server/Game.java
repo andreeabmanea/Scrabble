@@ -3,7 +3,7 @@ package server;
 import java.io.*;
 import java.util.*;
 
-public class Game {
+public class Game implements Serializable{
     private final List<Player> players = new ArrayList<>();
     private Integer turn;
     private Player currentPlayer;

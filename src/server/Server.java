@@ -67,9 +67,7 @@ public class Server {
             Socket socket = serverSocket.accept();
             ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
 
-//            Game game = new Game();// make new game
-
-            outStream.writeObject(game.board); // send the initial board
+            outStream.writeObject(new Game()); // send the game
 
             outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters()); // send his letters
 

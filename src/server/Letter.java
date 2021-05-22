@@ -12,6 +12,10 @@ public class Letter implements Serializable {
         this.value = value;
     }
 
+    public String getLetterName() {
+        return letterName;
+    }
+
     @Override
     public String toString() {
         return letterName;

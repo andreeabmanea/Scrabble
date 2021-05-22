@@ -23,6 +23,7 @@ public class LetterHolder implements Serializable {
         return chosenLetter;
     }
 
+
     public List<Letter> getCurrentLetters() {
         return currentLetters;
     }

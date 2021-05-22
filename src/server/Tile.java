@@ -6,8 +6,8 @@ public class Tile implements Serializable {
 
     int line, col;
     private final Board gameBoard;
-    String type;
-    Letter content;
+    public String type;
+    public Letter content;
 
     public Tile(Board gameBoard, int line, int col, String type, Letter content) {
         this.gameBoard = gameBoard;
@@ -15,6 +15,14 @@ public class Tile implements Serializable {
         this.line = line;
         this.type = type;
         this.content = content;
+    }
+
+    public Letter getContent() {
+        return content;
+    }
+
+    public String getType() {
+        return type;
     }
 
     @Override
