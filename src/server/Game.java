@@ -10,8 +10,12 @@ public class Game {
     public final LetterSack letterSack = new LetterSack();
     public final Board board = new Board(this);
     public List<Letter> pendingWord = new ArrayList<>();
+    //We use this for computing the score of the whole word, after adding the missing tiles that were already on the board
     public final List<Integer> coordX = new ArrayList<>();
     public final List<Integer> coordY = new ArrayList<>();
+    //We use this to memorize only the positions of the letters that were added by the player at a round
+    public final List<Integer> addedX = new ArrayList<>();
+    public final List<Integer> addedY = new ArrayList<>();
     public List<String> anagrams = new ArrayList<>();
     public String word = new String();
     boolean doubleWord = false;
@@ -35,6 +39,8 @@ public class Game {
         pendingWord.add(letter);
         coordX.add(i);
         coordY.add(j);
+        addedX.add(i);
+        addedY.add(j);
     }
 
     void addMissing() {
@@ -97,6 +103,8 @@ public class Game {
         pendingWord.clear();
         coordX.clear();
         coordY.clear();
+        addedX.clear();
+        addedY.clear();
     }
 
     public Integer computeScoreOfWord() throws IOException {
@@ -141,7 +149,6 @@ public class Game {
     public void transformPendingWord() {
         for (int i = 0; i < pendingWord.size(); i++)
             word = word + pendingWord.get(i).letterName;
-        System.out.println(word);
     }
     //TODO: search more efficiently
     public Boolean checkWord(String word) throws IOException {
@@ -159,10 +166,7 @@ public class Game {
 
     public Boolean confirmWord() throws IOException {
 
-        transformPendingWord();
-        System.out.println("Cuvantul: " + word);
         if (checkWord(word.toLowerCase())) {
-            System.out.println("Confirmed");
             return true;
         }
         return false;
@@ -183,7 +187,47 @@ public class Game {
     }
 
     public void removeWordFromBoard() {
-        for (int i = 0; i < pendingWord.size(); i++)
-            board.board[coordX.get(i)][coordY.get(i)].content = null;
+        for (int i = 0; i < addedX.size(); i++)
+            board.board[addedX.get(i)][addedY.get(i)].content = null;
+    }
+
+    public void playTurn() throws IOException {
+        //we put tiles on the board until a button is pressed
+
+            Scanner in = new Scanner(System.in);
+            String command = null;
+            int letterOnHolder = 0;
+            while (true) {
+                System.out.println("This is your holder:");
+                System.out.println(currentPlayer.getHolder().currentLetters);
+                System.out.println("Please enter the index of the letter, the line and the column where you want to place it");
+                letterOnHolder = in.nextInt();
+                if (letterOnHolder == 404){
+                    break;
+                }
+                int posX = in.nextInt();
+                int posY = in.nextInt();
+                currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(letterOnHolder), posX, posY);
+            }
+        addMissing();
+        transformPendingWord();
+        System.out.println("This was his word:");
+        System.out.println(pendingWord);
+        System.out.println(coordX + " " + coordY);
+        System.out.println("Added:" + addedX + " " + addedY);
+
+        if (!confirmWord()) {
+            for (int i = 0; i < addedX.size(); i++)
+                currentPlayer.getHolder().getCurrentLetters().add(board.board[addedX.get(i)][addedY.get(i)].content);
+            removeWordFromBoard();
+            System.out.println("The word does not exist!");
+        } else {
+            System.out.println("The score for the word:" + computeScoreOfWord());
+            currentPlayer.refillAfterTurn();
+        }
+        board.printBoardWithContent();
+
+        System.out.println(currentPlayer.getHolder().currentLetters);
+        overTurn();
     }
 }

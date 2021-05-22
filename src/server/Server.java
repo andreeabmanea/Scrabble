@@ -27,8 +27,7 @@ public class Server {
         System.out.println(currentPlayer.getHolder().currentLetters);
 
         //The player puts a word on the board
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 1, 1);
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 1);
+
 
 //        System.out.println();
 //        System.out.println("This is what he has left on the holder");
@@ -37,11 +36,7 @@ public class Server {
 //        System.out.println("This is how the board looks like, after first turn:");
 //        game.getBoard().printBoardWithContent();
 
-        System.out.println("This was his word:");
-        System.out.println(game.pendingWord);
-        System.out.println(game.coordX + " " + game.coordY);
-        game.addMissing();
-        System.out.println("The score for the word:" + game.computeScoreOfWord());
+
 
 //        System.out.println("After refill:");
 //        System.out.println(currentPlayer.getHolder().currentLetters);
@@ -55,14 +50,18 @@ public class Server {
 //        game.showAnagrams();
 //        game.overTurn();
 
-        game.overTurn();
+        while (game.getLetterSack().letterSack.size() > 0)
+            game.playTurn();
 
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 0);
-        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 2);
-        game.board.printBoardWithContent();
-        game.addMissing();
-        System.out.println(game.getPendingWord() + " " + game.coordX + " " + game.coordY);
-        System.out.println("The score: " + game.computeScoreOfWord());
+//        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 0);
+//        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 2);
+//        game.gameBoard.printBoardWithContent();
+//        game.addMissing();
+//        System.out.println(game.getPendingWord() + " " + game.coordX + " " + game.coordY);
+//        System.out.println("Added:" + game.addedX + " " + game.addedY);
+//        System.out.println("The score: " + game.computeScoreOfWord());
+//        game.removeWordFromBoard();
+//        game.getGameBoard().printBoardWithContent();
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             Socket socket = serverSocket.accept();
