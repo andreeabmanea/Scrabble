@@ -65,7 +65,7 @@ public class Game implements Serializable{
                 coordX.add(line);
                 pendingWord.add(board.board[line][missing.get(i)].content);
 
-                System.out.println(missing);
+//                System.out.println(missing);
             }
             List<Letter> sorted = new ArrayList(pendingWord);
             Collections.sort(sorted, Comparator.comparing(s->coordY.get(pendingWord.indexOf(s))));
@@ -87,7 +87,7 @@ public class Game implements Serializable{
                 coordX.add(missing.get(i));
                 coordY.add(col);
                 pendingWord.add(board.board[missing.get(i)][col].content);
-                System.out.println(missing);
+//                System.out.println(missing);
             }
             List<Letter> sorted = new ArrayList(pendingWord);
             Collections.sort(sorted, Comparator.comparing(s->coordX.get(pendingWord.indexOf(s))));
@@ -219,43 +219,45 @@ public class Game implements Serializable{
             board.board[addedX.get(i)][addedY.get(i)].content = null;
     }
 
-    public void playTurn() throws IOException {
-        // we put tiles on the board until a button is pressed
+    // This was used as a test to simulate a turn
 
-            Scanner in = new Scanner(System.in);
-            String command = null;
-            int letterOnHolder = 0;
-            while (true) {
-                System.out.println("This is your holder:");
-                System.out.println(currentPlayer.getHolder().currentLetters);
-                System.out.println("Please enter the index of the letter, the line and the column where you want to place it");
-                letterOnHolder = in.nextInt();
-                if (letterOnHolder == 404){
-                    break;
-                }
-                int posX = in.nextInt();
-                int posY = in.nextInt();
-                currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(letterOnHolder), posX, posY);
-            }
-        addMissing();
-        transformPendingWord();
-        System.out.print("This was his word: ");
-        System.out.println(pendingWord);
-        System.out.println(coordX + " " + coordY);
-        System.out.print("Added: " + addedX + " " + addedY);
-
-        if (!confirmWord()) {
-            for (int i = 0; i < addedX.size(); i++)
-                currentPlayer.getHolder().getCurrentLetters().add(board.board[addedX.get(i)][addedY.get(i)].content);
-            removeWordFromBoard();
-            System.out.println("The word does not exist!");
-        } else {
-            System.out.println("The score for the word:" + computeScoreOfWord());
-            currentPlayer.refillAfterTurn();
-        }
-        board.printBoardWithContent();
-
-        System.out.println(currentPlayer.getHolder().currentLetters);
-        overTurn();
-    }
+//    public void playTurn() throws IOException {
+//        // we put tiles on the board until a button is pressed
+//
+//            Scanner in = new Scanner(System.in);
+//            String command = null;
+//            int letterOnHolder = 0;
+//            while (true) {
+//                System.out.println("This is your holder:");
+//                System.out.println(currentPlayer.getHolder().currentLetters);
+//                System.out.println("Please enter the index of the letter, the line and the column where you want to place it");
+//                letterOnHolder = in.nextInt();
+//                if (letterOnHolder == 404){
+//                    break;
+//                }
+//                int posX = in.nextInt();
+//                int posY = in.nextInt();
+//                currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(letterOnHolder), posX, posY);
+//            }
+//        addMissing();
+//        transformPendingWord();
+//        System.out.print("This was his word: ");
+//        System.out.println(pendingWord);
+//        System.out.println(coordX + " " + coordY);
+//        System.out.print("Added: " + addedX + " " + addedY);
+//
+//        if (!confirmWord()) {
+//            for (int i = 0; i < addedX.size(); i++)
+//                currentPlayer.getHolder().getCurrentLetters().add(board.board[addedX.get(i)][addedY.get(i)].content);
+//            removeWordFromBoard();
+//            System.out.println("The word does not exist!");
+//        } else {
+//            System.out.println("The score for the word:" + computeScoreOfWord());
+//            currentPlayer.refillAfterTurn();
+//        }
+//        board.printBoardWithContent();
+//
+//        System.out.println(currentPlayer.getHolder().currentLetters);
+//        overTurn();
+//    }
 }

@@ -49,7 +49,7 @@ public class Client extends Application {
 
                     letters = (List<Letter>) inStream.readObject();
                     System.out.println("Here are your letters: " + letters);
-                  launch(args);
+                //  launch(args);
 
                     if (i == 0) {
                         System.out.print("Continue? yes/no/help/shuffle: ");

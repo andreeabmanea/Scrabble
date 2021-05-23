@@ -136,6 +136,7 @@ public class Server {
                         game.getCurrentPlayer().getHolder().getCurrentLetters().add(game.getBoard().board[game.addedX.get(i)][game.addedY.get(i)].content);
                     game.removeWordFromBoard();
                     System.out.println("The word does not exist!");
+                    game.overTurn();
                 } else {
                     score = game.computeScoreOfWord();
                     System.out.println("The score for the word:" + score);
