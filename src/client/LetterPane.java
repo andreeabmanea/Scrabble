@@ -1,5 +1,7 @@
 package client;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -95,9 +97,13 @@ public class LetterPane extends Pane {
             i++;
         }
 
-
-
-
         root.getChildren().addAll(buttons.get(0), buttons.get(1), buttons.get(2), buttons.get(3), buttons.get(4), buttons.get(5), buttons.get(6));
+
     }
+
+    public List<Button> getButtons() {
+        return buttons;
+    }
+
+
 }

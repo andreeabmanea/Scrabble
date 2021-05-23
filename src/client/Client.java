@@ -1,6 +1,8 @@
 package client;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
@@ -11,6 +13,8 @@ import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import server.*;
 
+import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.*;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -36,7 +40,7 @@ public class Client extends Application {
 
             System.out.println("Hello! Here is the current board");
             board = (Board) inStream.readObject();
-            board.printBoard();
+            board.printBoardWithContent();
             String command;
 
             while (true) {
@@ -44,7 +48,7 @@ public class Client extends Application {
                     // read letters
                     letters = (List<Letter>) inStream.readObject();
                     System.out.println("Here are your letters: " + letters);
-//                    launch(args);
+                  launch(args);
 
                     if (i == 0) {
                         System.out.print("Continue? yes/no/help/shuffle: ");
@@ -145,5 +149,76 @@ public class Client extends Application {
         primaryStage.setTitle("Scrabble Game");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        letterBar.getButtons().get(0).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                boardPane.add(letterBar.getButtons().get(0).getGraphic(), 7, 7);
+                letterBar.getButtons().get(0).setGraphic(null);
+
+            }
+        });
+
+        letterBar.getButtons().get(1).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                boardPane.add(letterBar.getButtons().get(1).getGraphic(), 8, 7);
+                letterBar.getButtons().get(1).setGraphic(null);
+
+            }
+        });
+
+        letterBar.getButtons().get(2).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                boardPane.add(letterBar.getButtons().get(2).getGraphic(), 9, 7);
+                letterBar.getButtons().get(2).setGraphic(null);
+
+            }
+        });
+
+        letterBar.getButtons().get(3).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                boardPane.add(letterBar.getButtons().get(3).getGraphic(), 10, 7);
+                letterBar.getButtons().get(3).setGraphic(null);
+
+            }
+        });
+
+        letterBar.getButtons().get(4).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                boardPane.add(letterBar.getButtons().get(4).getGraphic(), 11, 7);
+                letterBar.getButtons().get(4).setGraphic(null);
+
+            }
+        });
+
+        letterBar.getButtons().get(5).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                boardPane.add(letterBar.getButtons().get(5).getGraphic(), 7, 8);
+                letterBar.getButtons().get(5).setGraphic(null);
+
+            }
+        });
+
+        letterBar.getButtons().get(6).setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent actionEvent) {
+
+                boardPane.add(letterBar.getButtons().get(6).getGraphic(), 7, 9);
+                letterBar.getButtons().get(6).setGraphic(null);
+
+            }
+        });
+
     }
 }

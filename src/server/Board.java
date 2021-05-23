@@ -50,12 +50,17 @@ public class Board implements Serializable {
     }
 
     public void printBoardWithContent() {
+        System.out.print("/" + " ");
+        for (int i = 0; i < 15; i++)
+            System.out.print(i%10 + " ");
+        System.out.println();
         for (int i = 0; i < 15; i++) {
+            System.out.print(i%10 + " ");
             for (int j = 0; j < 15; j++)
                 if (board[i][j].content == null)
                     System.out.print("-" + " ");
                 else
-                System.out.print(board[i][j].content + " ");
+                    System.out.print(board[i][j].content + " ");
             System.out.println();
         }
     }
