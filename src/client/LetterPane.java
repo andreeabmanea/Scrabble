@@ -90,7 +90,7 @@ public class LetterPane extends Pane {
                 case "V" -> buttons.get(i).setGraphic(new ImageView(vLetter));
                 case "X" -> buttons.get(i).setGraphic(new ImageView(xLetter));
                 case "Z" -> buttons.get(i).setGraphic(new ImageView(zLetter));
-                case "Joker" -> buttons.get(i).setGraphic(new ImageView(joker));
+                case "@" -> buttons.get(i).setGraphic(new ImageView(joker));
             }
             i++;
         }
@@ -99,5 +99,10 @@ public class LetterPane extends Pane {
 
 
         root.getChildren().addAll(buttons.get(0), buttons.get(1), buttons.get(2), buttons.get(3), buttons.get(4), buttons.get(5), buttons.get(6));
+    }
+
+
+    public List<Button> getButtons() {
+        return buttons;
     }
 }
