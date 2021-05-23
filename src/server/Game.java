@@ -49,6 +49,12 @@ public class Game implements Serializable{
         Integer line = 0;
         Integer col = 0;
         if (coordX.get(0) == coordX.get(1)) {
+            if (board.board[coordX.get(0)][coordY.get(0)-1].content!=null) {
+                missing.add(coordY.get(0) - 1);
+            }
+            if (board.board[coordX.get(0)][coordY.get(coordY.size() - 1) + 1].content!=null) {
+                missing.add(coordY.get(coordY.size() - 1) + 1);
+            }
             line = coordX.get(0);
             for (int i = 0; i < coordY.size() - 1; i++)
                 if (coordY.get(i) != coordY.get(i + 1) - 1) {
@@ -65,11 +71,18 @@ public class Game implements Serializable{
             Collections.sort(sorted, Comparator.comparing(s->coordY.get(pendingWord.indexOf(s))));
             pendingWord = sorted;
         } else if (coordY.get(0) == coordY.get(1)) {
+            if (board.board[coordX.get(0) - 1][coordY.get(0)].content!=null) {
+                missing.add(coordX.get(0) - 1);
+            }
+            if (board.board[coordX.get(coordX.size()-1)+1][coordY.get(0)].content!=null) {
+                missing.add(coordX.get(coordX.size()-1)+1);
+            }
             col = coordY.get(0);
             for (int i = 0; i < coordX.size() - 1; i++)
                 if (coordX.get(i) != coordX.get(i + 1) - 1) {
                     missing.add(coordX.get(i) + 1);
                 }
+
             for (int i = 0; i < missing.size(); i++) {
                 coordX.add(missing.get(i));
                 coordY.add(col);
