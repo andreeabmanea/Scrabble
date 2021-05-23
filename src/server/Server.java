@@ -92,14 +92,13 @@ public class Server {
                             outStream.writeObject(game.getAnagrams());
                             outStream.flush();
                             game.anagrams.clear();
-                            response = in.readLine();
                         } else {
                             game.getCurrentPlayer().shuffleHolder();
                             outStream.reset();
                             outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters());
                             outStream.flush();
-                            response = in.readLine();
                         }
+                        response = in.readLine();
                     }
                     if (response.equals("no"))
                         break;
@@ -108,9 +107,25 @@ public class Server {
                     index = Integer.parseInt(in.readLine());
                     row = Integer.parseInt(in.readLine());
                     column = Integer.parseInt(in.readLine());
-                    System.out.println(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index));
-                    // change the tile
-                    game.getCurrentPlayer().putLetterInTile(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index), row, column);
+                    System.out.println("The letter: " + game.getCurrentPlayer().getHolder().getCurrentLetters().get(index));
+
+                    outStream.reset();
+                    if (game.getCurrentPlayer().getHolder().getCurrentLetters().get(index).getLetterName().equals("@")) {
+                        outStream.write(1);
+                        outStream.flush();
+                        // change tile
+                        game.getCurrentPlayer().putLetterInTile(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index), row, column);
+                        Letter jokersValue = new Letter(in.readLine(), 0);
+                        game.getPendingWord().remove(game.getPendingWord().size() - 1);
+                        game.getPendingWord().add(jokersValue);
+                    }
+                    else {
+                        outStream.write(0);
+                        outStream.flush();
+                        // change tile
+                        game.getCurrentPlayer().putLetterInTile(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index), row, column);
+                    }
+
                 }
                 // verify the word and make points
                 game.addMissing();
@@ -133,7 +148,7 @@ public class Server {
                 outStream.writeObject(game.getBoard());
                 outStream.flush();
                 outStream.reset();
-                outStream.write(score);
+                outStream.write(game.getCurrentPlayer().getScore());
                 outStream.flush();
             }
 

@@ -22,7 +22,9 @@ public class Client extends Application {
     public static final String ADDRESS = "127.0.0.1";
     public static final int NUM_COLS = 15;
     public static final int NUM_ROWS = 15;
-    public static Game game;
+    public static Board board;
+    public static List<Letter> letters;
+    public static Integer score;
 
     public static void main(String[] args) throws IOException {
         try (Socket socket = new Socket(ADDRESS, PORT);
@@ -33,17 +35,24 @@ public class Client extends Application {
 //            game = (Game) inStream.readObject(); // read the game
 
             System.out.println("Hello! Here is the current board");
-            Board board = (Board) inStream.readObject();
+            board = (Board) inStream.readObject();
             board.printBoard();
-            List<Letter> letters;
             String command;
+
             while (true) {
                 for (int i = 0; i < 7; i++) {
                     // read letters
-                    System.out.println("Here are your letters: " + inStream.readObject());
+                    letters = (List<Letter>) inStream.readObject();
+                    System.out.println("Here are your letters: " + letters);
+//                    launch(args);
 
-                    System.out.print("Continue? yes/no/help/shuffle: ");
-                    command = scan.next();
+                    if (i == 0) {
+                        System.out.print("Continue? yes/no/help/shuffle: ");
+                        command = scan.next();
+                    } else {
+                        System.out.print("Continue? yes/no/help: ");
+                        command = scan.next();
+                    }
                     while (command.equals("help") || command.equals("shuffle")) {
                         // give a response
                         out.println(command);
@@ -54,10 +63,15 @@ public class Client extends Application {
                             out.println(scan.next());
                             System.out.println("This are the results: " + inStream.readObject());
                         } else {
-                            System.out.println("Here are your new letters: " + inStream.readObject());
+                            letters = (List<Letter>) inStream.readObject();
+                            System.out.println("Here are your new letters: " + letters);
                         }
 
-                        System.out.print("Continue? yes/no/help/shuffle: ");
+                        if (i == 0) {
+                            System.out.print("Continue? yes/no/help/shuffle: ");
+                        } else {
+                            System.out.print("Continue? yes/no/help: ");
+                        }
                         command = scan.next();
                     }
                     if (command.equals("no")) {
@@ -74,12 +88,17 @@ public class Client extends Application {
                     out.println(scan.nextInt());
                     System.out.print("And the column where you want the letter to be: ");
                     out.println(scan.nextInt());
+
+                    if (inStream.read() == 1) {
+                        System.out.print("Enter Joker's value: ");
+                        out.println(scan.next());
+                    }
                 }
                 board = (Board) inStream.readObject();
                 board.printBoardWithContent();
-                System.out.println("Current score: " + inStream.read());
+                score = inStream.read();
+                System.out.println("Current score: " + score);
             }
-//            launch(args);
         } catch (UnknownHostException | ClassNotFoundException e) {
             System.err.println("No server listening... " + e);
         }
@@ -98,29 +117,29 @@ public class Client extends Application {
         StackPane window = new StackPane();
         Scene scene = new Scene(window, 1000, 600);
 
-        Board mainBoard = game.getBoard();
+        Board mainBoard = board;
         Tile tile;
 
-        GridPane board = new GridPane();
+        GridPane boardPane = new GridPane();
         for (int i = 0; i < NUM_COLS; i++)
             for (int j = 0; j < NUM_ROWS; j++) {
                 tile = mainBoard.getTile(i, j); // get board
                 // set tiles
                 switch (tile.getType()) {
-                    case "00" -> board.add((new ImageView(whiteTile)), j, i);
-                    case "Mi" -> board.add((new ImageView(centerTile)), j, i);
-                    case "3W" -> board.add((new ImageView(tripleWordTile)), j, i);
-                    case "2W" -> board.add((new ImageView(doubleWordTile)), j, i);
-                    case "3L" -> board.add((new ImageView(tripleLetterTile)), j, i);
-                    case "2L" -> board.add((new ImageView(doubleLetterTile)), j, i);
+                    case "00" -> boardPane.add((new ImageView(whiteTile)), j, i);
+                    case "Mi" -> boardPane.add((new ImageView(centerTile)), j, i);
+                    case "3W" -> boardPane.add((new ImageView(tripleWordTile)), j, i);
+                    case "2W" -> boardPane.add((new ImageView(doubleWordTile)), j, i);
+                    case "3L" -> boardPane.add((new ImageView(tripleLetterTile)), j, i);
+                    case "2L" -> boardPane.add((new ImageView(doubleLetterTile)), j, i);
                 }
             }
 
-        LetterPane letterBar = new LetterPane(game.getCurrentPlayer().getHolder().getCurrentLetters());
+        LetterPane letterBar = new LetterPane(letters);
 
 
-        board.setAlignment(Pos.CENTER);
-        BorderPane mainPane = new BorderPane(board, null, null, null, letterBar.getRoot());
+        boardPane.setAlignment(Pos.CENTER);
+        BorderPane mainPane = new BorderPane(boardPane, null, null, null, letterBar.getRoot());
 
         window.getChildren().add(mainPane);
         primaryStage.setTitle("Scrabble Game");
