@@ -42,23 +42,30 @@ public class Client extends Application {
                     // read letters
                     System.out.println("Here are your letters: " + inStream.readObject());
 
-                    System.out.print("Continue? yes/no/help: ");
+                    System.out.print("Continue? yes/no/help/shuffle: ");
                     command = scan.next();
-                    while (command.equals("help")) {
-                        out.println("help");
+                    while (command.equals("help") || command.equals("shuffle")) {
+                        // give a response
+                        out.println(command);
                         out.flush();
-                        System.out.print("Please enter your letters (ex: ABC): ");
-                        out.println(scan.next());
-                        System.out.println("This are the results: " + inStream.readObject());
-                        System.out.print("Continue? yes/no/help: ");
+
+                        if (command.equals("help")) {
+                            System.out.print("Please enter your letters (ex: ABC): ");
+                            out.println(scan.next());
+                            System.out.println("This are the results: " + inStream.readObject());
+                        } else {
+                            System.out.println("Here are your new letters: " + inStream.readObject());
+                        }
+
+                        System.out.print("Continue? yes/no/help/shuffle: ");
                         command = scan.next();
                     }
                     if (command.equals("no")) {
-                        out.println("no");
+                        out.println(command);
                         out.flush();
                         break;
                     }
-                    out.println("yes");
+                    out.println(command);
                     out.flush();
 
                     System.out.print("Please enter the index of the letter: ");
