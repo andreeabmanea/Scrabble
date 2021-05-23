@@ -46,17 +46,17 @@ public class Client extends Application {
             while (true) {
                 for (int i = 0; i < 7; i++) {
                     // read letters
+
                     letters = (List<Letter>) inStream.readObject();
                     System.out.println("Here are your letters: " + letters);
                   launch(args);
 
                     if (i == 0) {
                         System.out.print("Continue? yes/no/help/shuffle: ");
-                        command = scan.next();
                     } else {
                         System.out.print("Continue? yes/no/help: ");
-                        command = scan.next();
                     }
+                    command = scan.next();
                     while (command.equals("help") || command.equals("shuffle")) {
                         // give a response
                         out.println(command);
@@ -110,7 +110,6 @@ public class Client extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        // images
         Image whiteTile = new Image("resources_client/Clear_tile.png");
         Image tripleWordTile = new Image("resources_client/Tile_3W.png");
         Image doubleWordTile = new Image("resources_client/Tile_2W.png");
@@ -118,16 +117,12 @@ public class Client extends Application {
         Image doubleLetterTile = new Image("resources_client/Tile_2L.png");
         Image centerTile = new Image("resources_client/Star.png");
 
-        StackPane window = new StackPane();
-        Scene scene = new Scene(window, 1000, 600);
-
-        Board mainBoard = board;
         Tile tile;
 
         GridPane boardPane = new GridPane();
-        for (int i = 0; i < NUM_COLS; i++)
+        for (int i = 0; i < NUM_COLS; i++) {
             for (int j = 0; j < NUM_ROWS; j++) {
-                tile = mainBoard.getTile(i, j); // get board
+                tile = board.getTile(i, j); // get board
                 // set tiles
                 switch (tile.getType()) {
                     case "00" -> boardPane.add((new ImageView(whiteTile)), j, i);
@@ -138,12 +133,18 @@ public class Client extends Application {
                     case "2L" -> boardPane.add((new ImageView(doubleLetterTile)), j, i);
                 }
             }
+        }
+
+
+        StackPane window = new StackPane();
+        Scene scene = new Scene(window, 1000, 600);
 
         LetterPane letterBar = new LetterPane(letters);
+        ControlPane controlPane = new ControlPane();
 
 
         boardPane.setAlignment(Pos.CENTER);
-        BorderPane mainPane = new BorderPane(boardPane, null, null, null, letterBar.getRoot());
+        BorderPane mainPane = new BorderPane(boardPane, null, controlPane.getRoot(), null, letterBar.getRoot());
 
         window.getChildren().add(mainPane);
         primaryStage.setTitle("Scrabble Game");
