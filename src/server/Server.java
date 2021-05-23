@@ -66,19 +66,36 @@ public class Server {
             Socket socket = serverSocket.accept();
             BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             ObjectOutputStream outStream = new ObjectOutputStream(socket.getOutputStream());
-            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
 
-            // send initial board and his letters
             outStream.writeObject(game.getBoard()); // give client the board
-            outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters()); // give player's letters
+            outStream.flush();
 
             String response;
             int index;
             int row;
             int column;
+            int score = 0;
 
             while (game.getLetterSack().getLetterSack().size() > 0) {
                 while (true) {
+                    outStream.reset();
+                    outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters());
+                    outStream.flush();
+
+                    // still continue
+                    response = in.readLine();
+                    while (response.equals("help")) {
+                        game.computeAnagrams("",in.readLine());
+                        game.checkAnagrams();
+                        outStream.reset();
+                        outStream.writeObject(game.getAnagrams());
+                        outStream.flush();
+                        game.anagrams.clear();
+                        response = in.readLine();
+                    }
+                    if (response.equals("no"))
+                        break;
+
                     // index, row and column
                     index = Integer.parseInt(in.readLine());
                     row = Integer.parseInt(in.readLine());
@@ -86,27 +103,30 @@ public class Server {
                     System.out.println(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index));
                     // change the tile
                     game.getCurrentPlayer().putLetterInTile(game.getCurrentPlayer().getHolder().getCurrentLetters().get(index), row, column);
-
-                    // still continue
-                    response = in.readLine();
-                    if (response.equals("yes")) {
-                        break;
-                    }
-                    outStream.writeUnshared(game.getCurrentPlayer().getHolder().getCurrentLetters());
                 }
+                // verify the word and make points
                 game.addMissing();
                 game.transformPendingWord();
-                System.out.print("This was his word: " + game.word);
+                System.out.println("This was his word: " + game.word);
                 if (!game.confirmWord()) {
                     for (int i = 0; i < game.addedX.size(); i++)
                         game.getCurrentPlayer().getHolder().getCurrentLetters().add(game.getBoard().board[game.addedX.get(i)][game.addedY.get(i)].content);
                     game.removeWordFromBoard();
                     System.out.println("The word does not exist!");
                 } else {
-                    System.out.println("The score for the word:" + game.computeScoreOfWord());
+                    score = game.computeScoreOfWord();
+                    System.out.println("The score for the word:" + score);
                     game.getCurrentPlayer().refillAfterTurn();
                 }
                 game.board.printBoardWithContent();
+
+                // send the new board
+                outStream.reset();
+                outStream.writeObject(game.getBoard());
+                outStream.flush();
+                outStream.reset();
+                outStream.write(score);
+                outStream.flush();
             }
 
         } catch (IOException e) {

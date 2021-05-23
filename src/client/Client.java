@@ -28,7 +28,7 @@ public class Client extends Application {
         try (Socket socket = new Socket(ADDRESS, PORT);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream()) ) {
-            Scanner in = new Scanner(System.in);
+            Scanner scan = new Scanner(System.in);
 
 //            game = (Game) inStream.readObject(); // read the game
 
@@ -36,27 +36,41 @@ public class Client extends Application {
             Board board = (Board) inStream.readObject();
             board.printBoard();
             List<Letter> letters;
+            String command;
             while (true) {
                 for (int i = 0; i < 7; i++) {
-                    letters = (List<Letter>) inStream.readObject();
-                    System.out.println("Here are your letters: " + letters);
+                    // read letters
+                    System.out.println("Here are your letters: " + inStream.readObject());
 
-                    System.out.print("Please enter the index of the letter: ");
-                    out.println(in.nextInt());
-                    System.out.print("The line where you want the letter to be: ");
-                    out.println(in.nextInt());
-                    System.out.print("And the column where you want the letter to be: ");
-                    out.println(in.nextInt());
-
-
-                    System.out.print("Done? yes/no: ");
-                    if (in.next().equals("yes")) {
-                        out.println("yes");
-                       // board.printBoardWithContent();
+                    System.out.print("Continue? yes/no/help: ");
+                    command = scan.next();
+                    while (command.equals("help")) {
+                        out.println("help");
+                        out.flush();
+                        System.out.print("Please enter your letters (ex: ABC): ");
+                        out.println(scan.next());
+                        System.out.println("This are the results: " + inStream.readObject());
+                        System.out.print("Continue? yes/no/help: ");
+                        command = scan.next();
+                    }
+                    if (command.equals("no")) {
+                        out.println("no");
+                        out.flush();
                         break;
                     }
-                    out.println("no");
+                    out.println("yes");
+                    out.flush();
+
+                    System.out.print("Please enter the index of the letter: ");
+                    out.println(scan.nextInt());
+                    System.out.print("The line where you want the letter to be: ");
+                    out.println(scan.nextInt());
+                    System.out.print("And the column where you want the letter to be: ");
+                    out.println(scan.nextInt());
                 }
+                board = (Board) inStream.readObject();
+                board.printBoardWithContent();
+                System.out.println("Current score: " + inStream.read());
             }
 //            launch(args);
         } catch (UnknownHostException | ClassNotFoundException e) {

@@ -54,7 +54,6 @@ public class Game implements Serializable{
                 if (coordY.get(i) != coordY.get(i + 1) - 1) {
                     missing.add(coordY.get(i) + 1);
                 }
-
             for (int i = 0; i < missing.size(); i++) {
                 coordY.add(missing.get(i));
                 coordX.add(line);
@@ -65,14 +64,12 @@ public class Game implements Serializable{
             List<Letter> sorted = new ArrayList(pendingWord);
             Collections.sort(sorted, Comparator.comparing(s->coordY.get(pendingWord.indexOf(s))));
             pendingWord = sorted;
-
         } else if (coordY.get(0) == coordY.get(1)) {
             col = coordY.get(0);
             for (int i = 0; i < coordX.size() - 1; i++)
                 if (coordX.get(i) != coordX.get(i + 1) - 1) {
                     missing.add(coordX.get(i) + 1);
                 }
-
             for (int i = 0; i < missing.size(); i++) {
                 coordX.add(missing.get(i));
                 coordY.add(col);
@@ -105,6 +102,7 @@ public class Game implements Serializable{
         coordY.clear();
         addedX.clear();
         addedY.clear();
+        word = new String();
     }
 
     public Integer computeScoreOfWord() throws IOException {
@@ -137,8 +135,13 @@ public class Game implements Serializable{
                 wordScore = wordScore * 3;
             doubleWord = false;
             tripleWord = false;
-            word = new String();
             currentPlayer.refillAfterTurn();
+            pendingWord.clear();
+            coordX.clear();
+            coordY.clear();
+            addedX.clear();
+            addedY.clear();
+            word = new String();
             return wordScore;
         }
         word = new String();
@@ -164,6 +167,10 @@ public class Game implements Serializable{
         return false;
     }
 
+    public List<String> getAnagrams() {
+        return anagrams;
+    }
+
     public Boolean confirmWord() throws IOException {
 
         if (checkWord(word.toLowerCase())) {
@@ -179,6 +186,13 @@ public class Game implements Serializable{
             for (int i = 0; i < n; i++)
                 computeAnagrams(prefix + word.charAt(i), word.substring(0, i) + word.substring(i+1, n));
         }
+    }
+
+    public void checkAnagrams() throws IOException {
+        for (int i = 0 ; i < anagrams.size(); i++)
+            if (!checkWord(anagrams.get(i).toLowerCase())) {
+                anagrams.remove(i);
+            }
     }
 
     public void showAnagrams() {

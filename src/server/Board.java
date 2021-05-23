@@ -52,6 +52,9 @@ public class Board implements Serializable {
     public void printBoardWithContent() {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < 15; j++)
+                if (board[i][j].content == null)
+                    System.out.print("-" + " ");
+                else
                 System.out.print(board[i][j].content + " ");
             System.out.println();
         }
