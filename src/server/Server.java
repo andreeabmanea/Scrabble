@@ -84,14 +84,22 @@ public class Server {
 
                     // still continue
                     response = in.readLine();
-                    while (response.equals("help")) {
-                        game.computeAnagrams("",in.readLine());
-                        game.checkAnagrams();
-                        outStream.reset();
-                        outStream.writeObject(game.getAnagrams());
-                        outStream.flush();
-                        game.anagrams.clear();
-                        response = in.readLine();
+                    while (response.equals("help") || response.equals("shuffle")) {
+                        if (response.equals("help")) {
+                            game.computeAnagrams("", in.readLine());
+                            game.checkAnagrams();
+                            outStream.reset();
+                            outStream.writeObject(game.getAnagrams());
+                            outStream.flush();
+                            game.anagrams.clear();
+                            response = in.readLine();
+                        } else {
+                            game.getCurrentPlayer().shuffleHolder();
+                            outStream.reset();
+                            outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters());
+                            outStream.flush();
+                            response = in.readLine();
+                        }
                     }
                     if (response.equals("no"))
                         break;
