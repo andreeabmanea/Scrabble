@@ -155,6 +155,7 @@ public class Game implements Serializable{
             addedX.clear();
             addedY.clear();
             word = new String();
+            currentPlayer.score += wordScore;
             return wordScore;
         }
         word = new String();

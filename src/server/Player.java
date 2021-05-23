@@ -5,7 +5,7 @@ import java.io.Serializable;
 public class Player implements Serializable {
     private final Game game;
     private final String name;
-    private final Integer score;
+    public Integer score;
     private final LetterHolder holder;
 
 
@@ -41,5 +41,9 @@ public class Player implements Serializable {
         holder.currentLetters.clear();
         for (int i = 0; i < 7; i++)
             holder.currentLetters.add(game.getLetterSack().drawLetter());
+    }
+
+    public Integer getScore() {
+        return score;
     }
 }
