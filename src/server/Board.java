@@ -70,8 +70,7 @@ public class Board implements Serializable {
         return board[i][j];
     }
 
-    //from one tile we compute the neighbours
-
+    //From one tile we compute the neighbours
     public Tile getLeft(Tile tile) {
 
         if (tile.col == 0)

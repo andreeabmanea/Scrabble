@@ -12,7 +12,7 @@ public class LetterSack implements Serializable {
 
     public final List<Letter> letterSack = new ArrayList<>();
 
-    //the initial letter bag
+    //the initial letter bag (@ is Joker)
     public LetterSack() {
         try (FileReader fileReader = new FileReader("src/resources/letterConfiguration.csv");
                 BufferedReader bufferedReader = new BufferedReader(fileReader)) {
