@@ -8,59 +8,9 @@ public class Server {
     // Define the port on which the server is listening
     public static final int PORT = 7070;
 
-    public static void main ( String [] args ) throws IOException {
+    public static void main ( String [] args ) {
 
-        Game game = new Game();
-//        //We generate the letter sack
-//        System.out.println("The initial letter sack is:");
-//        System.out.println(game.getLetterSack().letterSack);
-//        System.out.println();
-//
-//        System.out.println("This is how the board looks like, based on the tiles type");
-//        game.getBoard().printBoard();
-//        System.out.println();
-//
-//        //The player draws first letters
-//        Player currentPlayer = game.getCurrentPlayer();
-//        System.out.println("The player's letters are:");
-//        System.out.println(currentPlayer.getHolder().currentLetters);
-
-        //The player puts a word on the board
-
-
-//        System.out.println();
-//        System.out.println("This is what he has left on the holder");
-//        System.out.println(currentPlayer.getHolder().currentLetters);
-//
-//        System.out.println("This is how the board looks like, after first turn:");
-//        game.getBoard().printBoardWithContent();
-
-
-
-//        System.out.println("After refill:");
-//        System.out.println(currentPlayer.getHolder().currentLetters);
-//
-//        System.out.println("Holder after shuffle:");
-//        currentPlayer.shuffleHolder();
-//        System.out.println(currentPlayer.getHolder().currentLetters);
-   //     System.out.println("The word is: " + game.word);
-//        System.out.println("Here are some suggestions for anagrams: ");
-//        game.computeAnagrams("", game.word);
-//        game.showAnagrams();
-//        game.overTurn();
-
-//        while (game.getLetterSack().letterSack.size() > 0)
-//            game.playTurn();
-
-//        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 0);
-//        currentPlayer.putLetterInTile(currentPlayer.getHolder().currentLetters.get(1), 2, 2);
-//        game.gameBoard.printBoardWithContent();
-//        game.addMissing();
-//        System.out.println(game.getPendingWord() + " " + game.coordX + " " + game.coordY);
-//        System.out.println("Added:" + game.addedX + " " + game.addedY);
-//        System.out.println("The score: " + game.computeScoreOfWord());
-//        game.removeWordFromBoard();
-//        game.getGameBoard().printBoardWithContent();
+        Game game = new Game(); // make a game
 
         try (ServerSocket serverSocket = new ServerSocket(PORT)) {
             Socket socket = serverSocket.accept();
@@ -70,30 +20,32 @@ public class Server {
             outStream.writeObject(game.getBoard()); // give client the board
             outStream.flush();
 
+            // for client's response, information about the inputted letter, and score
             String response;
             int index;
             int row;
             int column;
             int score = 0;
 
+            // while there are letters in the sack
             while (game.getLetterSack().getLetterSack().size() > 0) {
                 while (true) {
                     outStream.reset();
-                    outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters());
+                    outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters()); // give player's letters
                     outStream.flush();
 
                     // still continue
                     response = in.readLine();
-                    while (response.equals("help") || response.equals("shuffle")) {
+                    while (response.equals("help") || response.equals("shuffle")) { // can do multiple helps and shuffles
                         if (response.equals("help")) {
-                            game.computeAnagrams("", in.readLine());
+                            game.computeAnagrams("", in.readLine()); // generate anagrams based on client's letters choice
                             game.checkAnagrams();
                             outStream.reset();
-                            outStream.writeObject(game.getAnagrams());
+                            outStream.writeObject(game.getAnagrams()); // send the anagrams to the client
                             outStream.flush();
                             game.anagrams.clear();
                         } else {
-                            game.getCurrentPlayer().shuffleHolder();
+                            game.getCurrentPlayer().shuffleHolder(); // shuffle
                             outStream.reset();
                             outStream.writeObject(game.getCurrentPlayer().getHolder().getCurrentLetters());
                             outStream.flush();
@@ -110,6 +62,7 @@ public class Server {
                     System.out.println("The letter: " + game.getCurrentPlayer().getHolder().getCurrentLetters().get(index));
 
                     outStream.reset();
+                    // if the player used a joker
                     if (game.getCurrentPlayer().getHolder().getCurrentLetters().get(index).getLetterName().equals("@")) {
                         outStream.write(1);
                         outStream.flush();
@@ -127,13 +80,14 @@ public class Server {
                     }
 
                 }
-                // verify the word and make points
+                // add missing letters from the board to player's word
                 game.addMissing();
+                // verify the word and make points
                 game.transformPendingWord();
-                System.out.println("This was his word: " + game.word);
+                System.out.println("This was his word: " + game.getWord());
                 if (!game.confirmWord()) {
-                    for (int i = 0; i < game.addedX.size(); i++)
-                        game.getCurrentPlayer().getHolder().getCurrentLetters().add(game.getBoard().board[game.addedX.get(i)][game.addedY.get(i)].content);
+                    for (int i = 0; i < game.getAddedX().size(); i++)
+                        game.getCurrentPlayer().getHolder().getCurrentLetters().add(game.getBoard().getBoard()[game.getAddedX().get(i)][game.getAddedY().get(i)].getContent());
                     game.removeWordFromBoard();
                     System.out.println("The word does not exist!");
                     game.overTurn();
@@ -142,7 +96,7 @@ public class Server {
                     System.out.println("The score for the word:" + score);
                     game.getCurrentPlayer().refillAfterTurn();
                 }
-                game.board.printBoardWithContent();
+                game.getBoard().printBoardWithContent();
 
                 // send the new board
                 outStream.reset();

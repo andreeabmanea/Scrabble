@@ -30,26 +30,26 @@ public class Client extends Application {
     public static List<Letter> letters;
     public static Integer score;
 
+    // for a preview of the user interface, we have a launch
     public static void main(String[] args) throws IOException {
         try (Socket socket = new Socket(ADDRESS, PORT);
              PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
              ObjectInputStream inStream = new ObjectInputStream(socket.getInputStream()) ) {
             Scanner scan = new Scanner(System.in);
 
-//            game = (Game) inStream.readObject(); // read the game
-
             System.out.println("Hello! Here is the current board");
             board = (Board) inStream.readObject();
             board.printBoardWithContent();
             String command;
 
+            // while there are letters in the sack
             while (true) {
                 for (int i = 0; i < 7; i++) {
                     // read letters
 
                     letters = (List<Letter>) inStream.readObject();
                     System.out.println("Here are your letters: " + letters);
-                //  launch(args);
+//                  launch(args); // for interface
 
                     if (i == 0) {
                         System.out.print("Continue? yes/no/help/shuffle: ");
@@ -118,7 +118,7 @@ public class Client extends Application {
         Image centerTile = new Image("resources_client/Star.png");
 
         Tile tile;
-
+        // for game's tiles
         GridPane boardPane = new GridPane();
         for (int i = 0; i < NUM_COLS; i++) {
             for (int j = 0; j < NUM_ROWS; j++) {
@@ -134,12 +134,12 @@ public class Client extends Application {
                 }
             }
         }
-
-
         StackPane window = new StackPane();
         Scene scene = new Scene(window, 1000, 600);
 
+        // for player's letters
         LetterPane letterBar = new LetterPane(letters);
+        // for submitting or shuffling
         ControlPane controlPane = new ControlPane();
 
 
